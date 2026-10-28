@@ -1,0 +1,130 @@
+# ContentGuard Moderation Rules
+# Each rule has: name, category, pattern (regex), score, and optional auto_block flag.
+# Rules are matched against input text in order. Multiple rules can match.
+# The rule engine produces signals; the decision engine interprets them.
+
+version: "2026.01.0"
+
+categories:
+  - threat
+  - harassment
+  - hate
+  - self_harm
+
+rules:
+  # ── THREAT ────────────────────────────────────────────
+  - name: threat_direct_first_person
+    category: threat
+    pattern: '\b(i\s+will|i''m\s+going\s+to|i''m\s+gonna|imma)\s+(hurt|kill|stab|shoot|attack|destroy|end|murder|find\s+and\s+kill)\s+(you|him|her|them)\b'
+    score: 0.8
+    auto_block: false
+    description: "Direct first-person threat toward a person"
+
+  - name: threat_auto_block
+    category: threat
+    pattern: '\b(i\s+will\s+kill|going\s+to\s+murder|gonna\s+stab|i''ll\s+shoot)\s+(you|him|her|them)\b'
+    score: 0.97
+    auto_block: true
+    description: "Unambiguous lethal threat — auto-block without LLM confirmation"
+
+  - name: threat_conditional
+    category: threat
+    pattern: '\b(if\s+you\s+don''t|unless\s+you)\s+.{0,40}\b(hurt|kill|destroy|attack)\b'
+    score: 0.6
+    auto_block: false
+    description: "Conditional threat pattern"
+
+  - name: threat_generic
+    category: threat
+    pattern: '\b(kill|stab|shoot|hurt|find)\s+you\b'
+    score: 0.8
+    auto_block: false
+    description: "Generic threat verb followed by 'you'"
+
+  # ── HARASSMENT / PROFANITY ────────────────────────────
+  - name: profanity_severe
+    category: harassment
+    pattern: '\b(motherfucker|motherfuckin|motherfucking|mofo|cocksucker|cunt|fuckhead|dipshit)\b'
+    score: 0.95
+    auto_block: true
+    description: "Severe profanity and vulgar abuse — auto-block"
+
+  - name: profanity_common
+    category: harassment
+    pattern: '\b(fuck|fucking|fucker|bitch|bastard|asshole|bullshit|dickhead)\b'
+    score: 0.75
+    auto_block: false
+    description: "Common expletives and insults"
+
+  - name: insult_term
+    category: harassment
+    pattern: '\b(idiot|stupid|pathetic|moron|loser|dumb|worthless|disgusting|trash|garbage)\b'
+    score: 0.4
+    auto_block: false
+    description: "Common insult term — context matters"
+
+  - name: harassment_targeted
+    category: harassment
+    pattern: '\byou\s+are\s+(an?\s+)?(idiot|stupid|pathetic|moron|loser|worthless|disgusting|trash|motherfucker|bitch|bastard|asshole)\b'
+    score: 0.85
+    auto_block: false
+    description: "Targeted insult directed at 'you'"
+
+  - name: harassment_imperative
+    category: harassment
+    pattern: '\b(shut\s+up|go\s+away|get\s+lost|nobody\s+asked|no\s+one\s+cares)\b'
+    score: 0.35
+    auto_block: false
+    description: "Dismissive / silencing language"
+
+  # ── HATE ──────────────────────────────────────────────
+  - name: hate_slur
+    category: hate
+    pattern: '\b(slur_placeholder_1|slur_placeholder_2)\b'
+    score: 0.9
+    auto_block: false
+    description: "Known hate-speech slur (placeholder — replace with actual terms)"
+
+  - name: hate_group_dehumanize
+    category: hate
+    pattern: '\b(all|every|those)\s+\w+\s+(are|should)\s+(animals|subhuman|vermin|parasites|filth)\b'
+    score: 0.75
+    auto_block: false
+    description: "Dehumanising language toward a group"
+
+  # ── SELF-HARM ─────────────────────────────────────────
+  - name: self_harm_intent
+    category: self_harm
+    pattern: '\b(i\s+want\s+to\s+die|i\s+don''t\s+want\s+to\s+live|end\s+it\s+all|kill\s+myself|hurt\s+myself)\b'
+    score: 0.7
+    auto_block: false
+    description: "Expression of self-harm intent"
+
+  - name: self_harm_method
+    category: self_harm
+    pattern: '\b(how\s+to\s+(commit|do)|best\s+way\s+to)\s+(suicide|self[- ]harm|end\s+my\s+life)\b'
+    score: 0.85
+    auto_block: false
+    description: "Seeking self-harm methods"
+
+# Decision thresholds — the decision engine uses these to map signals to outcomes
+thresholds:
+  block:
+    # BLOCK when: auto_block rule fires, OR (rule_score >= 0.9 AND llm_confidence >= 0.85)
+    rule_score: 0.9
+    llm_confidence: 0.85
+  review:
+    # REVIEW when: any signal present AND llm_confidence >= 0.3 AND llm_confidence < block threshold
+    llm_confidence: 0.3
+  warn:
+    # WARN when: rule matched but llm_confidence is low (below review threshold)
+    llm_confidence: 0.0
+
+# Severity mapping
+severity:
+  block: high
+  review_high_confidence: high    # llm_confidence >= 0.7
+  review_medium_confidence: medium # llm_confidence >= 0.5
+  review_low_confidence: low       # llm_confidence < 0.5
+  warn: low
+  allow: none
