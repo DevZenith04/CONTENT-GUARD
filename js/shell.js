@@ -7,13 +7,23 @@
   CG.fmtTime = iso => new Date(iso).toLocaleString([], { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
   CG.glyph = { ALLOW: '○', WARN: '◐', REVIEW: '◇', BLOCK: '■' };
   CG.pill = o => `<span class="pill" data-o="${CG.esc(o)}">${CG.esc(o)}</span>`;
-  CG.bar = (value, max = 1) => `<div class="bar"><i style="width:${Math.round(Math.min(1, value / max) * 100)}%"></i></div>`;
+
+  /* Discrete 20-segment progress bar */
+  CG.bar = (value, max = 1) => {
+    const count = 20;
+    const on = Math.min(count, Math.max(0, Math.round((Number(value) / max) * count)));
+    let s = '<div class="bar" aria-hidden="true">';
+    for (let i = 0; i < count; i++) {
+      s += `<i class="${i < on ? 'on' : ''}"></i>`;
+    }
+    return s + '</div>';
+  };
 
   CG.signalList = function (signals) {
     if (!signals || !signals.length) return '<p class="muted small">No signals. Nothing matched.</p>';
     return '<ul class="trace">' + signals.map(s => s.source === 'rule'
       ? `<li><span class="src">RULE</span><span>${CG.esc(s.name)}</span>${CG.bar(s.score)}<span class="mono small">${Number(s.score).toFixed(2)}</span></li>`
-      : `<li><span class="src">LLM</span><span>${CG.esc(s.category)}${s.abstain ? ' <span class="chip">abstain</span>' : ''}</span>${CG.bar(s.confidence)}<span class="mono small">${Number(s.confidence).toFixed(2)}</span></li>`
+      : `<li><span class="src">LLM</span><span>${CG.esc(s.category)}${s.abstain ? ' <span class="chip">ABSTAIN</span>' : ''}</span>${CG.bar(s.confidence)}<span class="mono small">${Number(s.confidence).toFixed(2)}</span></li>`
     ).join('') + '</ul>';
   };
 
@@ -43,14 +53,5 @@
       b.textContent = 'PREVIEW · API UNREACHABLE · SHOWING LABELLED FIXTURES, NOT MODEL OUTPUT OR MEASURED RESULTS';
       b.classList.add('on');
     }
-  };
-
-  CG.toast = function (msg) {
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.setAttribute('role', 'status');
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3200);
   };
 })(window);

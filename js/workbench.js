@@ -43,8 +43,8 @@
           <span class="mono muted small">Ctrl/⌘ + Enter</span>
         </div>
         <div class="label mt">Samples</div>
-        <div class="row mt">${SAMPLES.map((_, i) => `<button type="button" class="chip" data-sample="${i}">sample ${String(i + 1).padStart(2, '0')}</button>`).join('')}</div>
-        <p id="err" class="mono mt" role="alert" style="min-height:24px;font-size:12px;color:var(--accent)"></p>
+        <div class="row mt">${SAMPLES.map((_, i) => `<button type="button" class="chip" data-sample="${i}">SAMPLE ${String(i + 1).padStart(2, '0')}</button>`).join('')}</div>
+        <p id="err" class="mono mt err-msg" role="alert"></p>
       </section>
       <section class="panel" id="result" aria-live="polite">
         <div class="label">Result</div>
@@ -96,7 +96,7 @@
       let cls = 'node';
       let label = '';
       if (skipped) { cls += ' skip'; label = 'skipped'; }
-      else if (state === 'running') cls += ' run';
+      else if (state === 'running') { cls += ' run'; label = '[RUNNING]'; }
       else if (state === 'done') cls += ' done';
       const outAttr = name === 'Outcome' && state === 'done' && outcome ? ` data-o="${CG.esc(outcome)}"` : '';
       if (name === 'Outcome' && outcome && state === 'done') label = outcome;
@@ -122,7 +122,7 @@
         <span class="label">severity · ${CG.esc(r.severity)}</span>
       </div>
       <div class="row mt">${r.categories.length ? r.categories.map(c => `<span class="chip">${CG.esc(c)}</span>`).join('') : '<span class="muted small">no categories</span>'}</div>
-      <p class="mt" style="line-height:1.6">${CG.esc(r.explanation)}</p>
+      <p class="mt lead-text">${CG.esc(r.explanation)}</p>
       <div class="label mt">Signals</div>
       <div class="mt">${CG.signalList(r.signals)}</div>
       <div class="tiles mt">
@@ -145,7 +145,7 @@
     busy = true;
     const btn = document.querySelector('#analyze');
     btn.disabled = true;
-    btn.textContent = 'Analyzing…';
+    btn.textContent = '[ANALYZING]';
     renderPipe('running');
     try {
       const { data, source } = await CG.api.moderate(text, mode);

@@ -58,16 +58,36 @@
     const s = summary(mode);
     document.querySelector('#cmName').textContent = MODES.find(m => m[0] === mode)[1];
 
-    document.querySelector('#tiles').innerHTML = [
-      tile('Precision', pct(s.P), 'macro, 4 categories'),
-      tile('Recall', pct(s.R), 'macro, 4 categories'),
-      tile('F1', pct(s.F1), 'macro, 4 categories'),
-      tile('False positive rate', pct(s.FPR), 'macro'),
-      tile('False negative rate', pct(s.FNR), 'macro'),
-      tile('Review rate', pct(s.review), 'share sent to a human'),
-      tile('Latency median', s.lat.median + ' ms', 'p95 ' + s.lat.p95 + ' ms'),
-      tile('Cost per 1,000', s.cost == null ? 'not measured' : '$' + s.cost, 'provider dependent')
-    ].join('');
+    const revBlocks = 20;
+    const revOn = Math.min(revBlocks, Math.max(0, Math.round((s.review || 0) * revBlocks)));
+    let revBar = '<div class="bar" aria-hidden="true" style="margin-top:8px">';
+    for (let i = 0; i < revBlocks; i++) {
+      revBar += `<i class="${i < revOn ? 'on' : ''}"></i>`;
+    }
+    revBar += '</div>';
+
+    document.querySelector('#tiles').innerHTML = `
+      <div class="hero-metric">
+        <div>
+          <div class="label">Macro Benchmark · Primary Target</div>
+          <div class="hero-f1">${pct(s.F1)}</div>
+          <p class="small muted mt">Macro F1 average across 4 safety categories</p>
+        </div>
+        <div style="min-width:260px">
+          <div class="label">Operational Burden · Review Rate</div>
+          <div class="mono" style="font-size:24px;font-weight:500;margin:8px 0;color:var(--text-display)">${pct(s.review)}</div>
+          ${revBar}
+          <div class="small muted mt">${Math.round((s.review || 0) * 100)}% sent to human queue</div>
+        </div>
+      </div>
+      <div class="stat-row mt">
+        <div class="stat-item"><span class="label">Macro Precision</span><span class="val">${pct(s.P)}</span></div>
+        <div class="stat-item"><span class="label">Macro Recall</span><span class="val">${pct(s.R)}</span></div>
+        <div class="stat-item"><span class="label">False Positive Rate</span><span class="val">${pct(s.FPR)}</span></div>
+        <div class="stat-item"><span class="label">False Negative Rate</span><span class="val">${pct(s.FNR)}</span></div>
+        <div class="stat-item"><span class="label">Median Latency</span><span class="val">${s.lat.median} ms</span></div>
+        <div class="stat-item"><span class="label">p95 Latency</span><span class="val">${s.lat.p95} ms</span></div>
+      </div>`;
 
     document.querySelector('#percat').innerHTML = `<table class="thin">
       <thead><tr><th>Category</th><th>Positives</th><th>Precision</th><th>Recall</th><th>F1</th><th>FPR</th><th>FNR</th></tr></thead>

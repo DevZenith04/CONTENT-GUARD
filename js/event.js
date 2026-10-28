@@ -28,7 +28,7 @@
         <div class="page-title"><div>
           <div class="label">Module 03 · Event</div>
           <h1>${e.status === 404 ? 'Not found' : 'Could not load event'}</h1>
-          <p class="mono" style="color:var(--accent)">${CG.esc(e.message)}</p>
+          <p class="mono err-msg">${CG.esc(e.message)}</p>
         </div></div>
         <a class="btn" href="review.html">Go to review queue</a>`;
     }
@@ -55,7 +55,7 @@
               ${final ? CG.pill(final) : '<span class="pill" data-o="REVIEW">Not reviewed</span>'}
               <p class="small muted">${final ? 'Reviewer ' + CG.esc(r.reviewer) : 'No reviewer action'}</p></div>
           </div>
-          <p class="mt" style="line-height:1.6">${CG.esc(ev.explanation)}</p>
+          <p class="mt lead-text">${CG.esc(ev.explanation)}</p>
           ${final ? `<p class="mt"><span class="label">Reason</span><br>${CG.esc(r.reason)}</p>` : ''}
         </section>
         <section class="panel">

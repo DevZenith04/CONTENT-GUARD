@@ -103,19 +103,24 @@
     try {
       ({ data: ev, source } = await CG.api.getEvent(c.event_id));
     } catch (e) {
-      CG.toast('Could not open case: ' + e.message);
+      const banner = document.querySelector('#banner');
+      if (banner) { banner.textContent = `[ERROR · ${e.message.toUpperCase()}]`; banner.classList.add('on'); }
       return;
     }
     CG.banner(source);
     const r = ev.review;
-    if (!r) { CG.toast('No review case exists for this event'); return; }
+    if (!r) {
+      const banner = document.querySelector('#banner');
+      if (banner) { banner.textContent = '[NO REVIEW CASE ATTACHED TO THIS EVENT]'; banner.classList.add('on'); }
+      return;
+    }
     state.openId = caseId;
     const drawer = document.querySelector('#drawer');
     drawer.dataset.case = caseId;
     drawer.innerHTML = `
-      <div class="row between"><span class="label mono">${CG.esc(caseId)}</span><button class="btn btn-sm" type="button" data-close>Close</button></div>
+      <div class="row between"><span class="label mono">${CG.esc(caseId)}</span><button class="btn btn-sm" type="button" data-close>[ X ]</button></div>
       <div class="row mt">${CG.pill(ev.outcome)}<span class="label">system · ${CG.esc(ev.severity)}</span></div>
-      <p class="mt" style="line-height:1.6">${CG.esc(ev.explanation)}</p>
+      <p class="mt lead-text">${CG.esc(ev.explanation)}</p>
       <div class="label mt">Signals</div>
       <div class="mt">${CG.signalList(ev.signals)}</div>
       <div class="panel-inset mt">
@@ -134,9 +139,10 @@
           <p class="small muted mt">REVIEW is a case status, not a final outcome. A reason is always required.</p>
           <label class="fld mt"><span class="label">Reason</span>
             <textarea id="reason" rows="3" placeholder="What decided this case?"></textarea></label>
-          <p class="mono small mt" id="fErr" role="alert" style="min-height:20px;color:var(--accent)"></p>
+          <p class="mono small mt err-msg" id="fErr" role="alert"></p>
           <div class="row"><button class="btn btn-primary" type="submit">Record decision</button>
             <span class="small muted">Audit entry: review.override</span></div>
+          <p id="status" class="mono small mt" role="status"></p>
         </form>`}
       <div class="mt"><div class="label">History</div>
         <ul class="timeline mt">${r.history.map(h => `<li><span class="mono small">${CG.fmtTime(h.at)}</span><br>${CG.esc(h.event)} <span class="muted">· ${CG.esc(h.actor)}</span></li>`).join('')}</ul>
@@ -184,11 +190,13 @@
     try {
       const { data, source } = await CG.api.decideReview(caseId, { final_outcome: picked.value, reason });
       CG.banner(source);
-      CG.toast('Recorded ' + data.final_outcome + ' · audit entry written');
+      const status = drawer.querySelector('#status');
+      if (status) status.textContent = `[RECORDED · ${data.final_outcome} · AUDIT ENTRY WRITTEN]`;
       await load();
-      await openCase(caseId);
+      setTimeout(() => openCase(caseId), 600);
     } catch (ex) {
       err.textContent = ex.message;
+      if (reasonEl) reasonEl.setAttribute('aria-invalid', 'true');
       if (submitBtn) submitBtn.disabled = false;
     }
   });
