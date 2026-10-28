@@ -1,8 +1,8 @@
 """ContentGuard · Application settings loaded from environment or .env."""
 
 from pathlib import Path
-from pydantic_settings import BaseSettings
 
+from pydantic_settings import BaseSettings
 
 _BACKEND_DIR = Path(__file__).resolve().parent
 

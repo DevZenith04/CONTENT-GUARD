@@ -13,10 +13,11 @@ Manages the full lifecycle of a moderation request:
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from config import settings
 from models.enums import Mode, Outcome, ReviewStatus
@@ -41,20 +42,21 @@ def _new_id(prefix: str) -> str:
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 class Pipeline:
     """Central orchestrator.  Initialised once at app startup."""
 
-    def __init__(self) -> None:
+    def __init__(self, settings_obj=None) -> None:
+        s = settings_obj or settings
         # Rule engine
-        rule_config = load_rules(settings.rules_path)
+        rule_config = load_rules(s.rules_path)
         self.rules = RuleEngine(rule_config)
         self.decision = DecisionEngine(thresholds=rule_config.thresholds)
 
         # Transformer
-        self.llm = TransformerAnalyzer(model_name=settings.transformer_model)
+        self.llm = TransformerAnalyzer(model_name=s.transformer_model)
 
     async def startup(self) -> None:
         """Load the transformer model (called once during app lifespan)."""
@@ -68,22 +70,24 @@ class Pipeline:
     def model_version(self) -> str:
         return self.llm.model_version
 
-    async def moderate(self, text: str, mode: Mode, store) -> ModerateResponse:
-        """Run the full moderation pipeline and persist the event."""
-        start = time.perf_counter_ns()
-
-        # ── Stage 1: Rules ─────────────────────────────────
+    async def analyze(self, text: str, mode: Mode):
+        """Pure analysis: no persistence. Used by the API and the evaluation runner."""
         rule_hits: list[dict] = []
         if mode != Mode.LLM_ONLY:
             rule_hits = self.rules.match(text)
 
-        # ── Stage 2: LLM (transformer) ────────────────────
         llm_signals: list[LLMSignal] = []
         if mode != Mode.RULE_ONLY:
-            llm_signals = self.llm.predict(text)
+            llm_signals = await asyncio.to_thread(self.llm.predict, text)
 
-        # ── Stage 3: Decision ─────────────────────────────
         result = self.decision.decide(rule_hits, llm_signals, mode.value)
+        return result, rule_hits, llm_signals
+
+    async def moderate(self, text: str, mode: Mode, store) -> ModerateResponse:
+        """Run the full moderation pipeline and persist the event."""
+        start = time.perf_counter_ns()
+
+        result, rule_hits, llm_signals = await self.analyze(text, mode)
 
         elapsed_ms = int((time.perf_counter_ns() - start) / 1_000_000)
         request_id = _new_id("mod")

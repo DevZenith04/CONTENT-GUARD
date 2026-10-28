@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "dataset_hash": "a48604466be3",
+    "items": 50,
+    "policy_version": "2026.01.0",
+    "model_version": "transformer:unitary/toxic-bert",
+    "run_at": "2026-10-28T20:10:19+00:00",
+    "preview": false
+  },
+  "modes": {
+    "rule_only": {
+      "review_rate": 0.4,
+      "latency_ms": {
+        "median": 0,
+        "p95": 0
+      },
+      "cost_per_1k": null,
+      "counts": {
+        "threat": {
+          "tp": 6,
+          "fp": 3,
+          "fn": 2,
+          "tn": 39
+        },
+        "harassment": {
+          "tp": 7,
+          "fp": 2,
+          "fn": 11,
+          "tn": 30
+        },
+        "hate": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 1,
+          "tn": 46
+        },
+        "self_harm": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 1,
+          "tn": 44
+        }
+      }
+    },
+    "llm_only": {
+      "review_rate": 0.32,
+      "latency_ms": {
+        "median": 24,
+        "p95": 26
+      },
+      "cost_per_1k": null,
+      "counts": {
+        "threat": {
+          "tp": 8,
+          "fp": 5,
+          "fn": 0,
+          "tn": 37
+        },
+        "harassment": {
+          "tp": 17,
+          "fp": 13,
+          "fn": 1,
+          "tn": 19
+        },
+        "hate": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 2,
+          "tn": 46
+        },
+        "self_harm": {
+          "tp": 5,
+          "fp": 1,
+          "fn": 1,
+          "tn": 43
+        }
+      }
+    },
+    "hybrid": {
+      "review_rate": 0.36,
+      "latency_ms": {
+        "median": 26,
+        "p95": 29
+      },
+      "cost_per_1k": null,
+      "counts": {
+        "threat": {
+          "tp": 8,
+          "fp": 5,
+          "fn": 0,
+          "tn": 37
+        },
+        "harassment": {
+          "tp": 17,
+          "fp": 13,
+          "fn": 1,
+          "tn": 19
+        },
+        "hate": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 1,
+          "tn": 46
+        },
+        "self_harm": {
+          "tp": 5,
+          "fp": 1,
+          "fn": 1,
+          "tn": 43
+        }
+      }
+    }
+  }
+}

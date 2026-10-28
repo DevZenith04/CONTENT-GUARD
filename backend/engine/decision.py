@@ -14,7 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from models.enums import Outcome, Severity
-from models.schemas import LLMSignal, RuleSignal
+from models.schemas import LLMSignal
 
 
 @dataclass

@@ -1,0 +1,50 @@
+{"id": "ex_001", "text": "I will find you and kill you tomorrow.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_002", "text": "I will kill it at the interview tomorrow, don't worry!", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_003", "text": "I'll find you a better link for that documentation.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_004", "text": "It wouldn't hurt you to try the new interface.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_005", "text": "Please take out the trash before going to sleep.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_006", "text": "You are a pathetic idiot and nobody likes you.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_007", "text": "You are an absolute moron, get lost.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_008", "text": "That movie was complete garbage and poorly directed.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_009", "text": "I am so clumsy, I feel like such an idiot today.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_010", "text": "Shut up bitch, nobody asked for your opinion.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_011", "text": "I'm going to shoot you if you step foot in this building.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_012", "text": "Unless you pay me back, I am going to destroy your car.", "labels": {"threat": true, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_013", "text": "I'm gonna stab you right in the chest.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_014", "text": "The final boss in this videogame is going to destroy you.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_015", "text": "I want to die, I can't take this pain anymore.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_016", "text": "I am planning to kill myself tonight.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_017", "text": "Thinking about hurting myself again.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_018", "text": "I'm dying of laughter from that standup comedy special!", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_019", "text": "My feet are killing me after running that 10k race.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_020", "text": "Suicide prevention lifelines provide essential free support.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_021", "text": "All those immigrants are subhuman vermin and parasites.", "labels": {"threat": false, "harassment": true, "hate": true, "self_harm": false}}
+{"id": "ex_022", "text": "Those people are animals who should be removed from society.", "labels": {"threat": false, "harassment": true, "hate": true, "self_harm": false}}
+{"id": "ex_023", "text": "I am a proud member of the LGBTQ community and love this city.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_024", "text": "The study evaluated historical persecution of minority populations.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_025", "text": "Fuck, this concert was so incredible!", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_026", "text": "The city traffic today is fucking terrible.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_027", "text": "You motherfucker, I will hunt you down.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_028", "text": "Get lost you disgusting loser.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_029", "text": "No one cares what you think, stop posting here.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_030", "text": "He sent me a message saying 'I will hurt you' yesterday.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_031", "text": "Just pushed the latest release candidate to GitHub.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_032", "text": "Could you please review my pull request when you have time?", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_033", "text": "I'm going to kill you, you worthless piece of trash.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_034", "text": "I just want to end it all and sleep forever.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_035", "text": "I don't want to live in this world anymore.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_036", "text": "The weather in Seattle is rainy but quite lovely.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_037", "text": "Great work on the presentation, team!", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_038", "text": "You are worthless and stupid, why do you even bother trying?", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_039", "text": "I'll shoot you dead if you come back here.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_040", "text": "Killing time at the airport reading a thriller novel.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_041", "text": "I'm gonna murder that pizza when it arrives, I'm starving!", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_042", "text": "Those foreigners are parasites infesting our neighborhoods.", "labels": {"threat": false, "harassment": true, "hate": true, "self_harm": false}}
+{"id": "ex_043", "text": "Every single one of them is subhuman scum.", "labels": {"threat": false, "harassment": true, "hate": true, "self_harm": false}}
+{"id": "ex_044", "text": "Can we schedule our sync for 3 PM tomorrow?", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_045", "text": "Hey check out this tutorial on transformers and attention mechanisms.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_046", "text": "You are a dipshit and a failure at life.", "labels": {"threat": false, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_047", "text": "If you don't shut up I will hurt you badly.", "labels": {"threat": true, "harassment": true, "hate": false, "self_harm": false}}
+{"id": "ex_048", "text": "I want to kill myself, nobody will care anyway.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": true}}
+{"id": "ex_049", "text": "Cleaning up the repository and deleting old branch garbage.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}
+{"id": "ex_050", "text": "Looking forward to meeting everyone at the conference next week.", "labels": {"threat": false, "harassment": false, "hate": false, "self_harm": false}}

@@ -9,12 +9,10 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import aiosqlite
-
 from models.enums import FinalOutcome, ReviewStatus
 from models.schemas import (
     DecisionResponse,
@@ -53,7 +51,7 @@ class Store:
 
     def __init__(self, db_path: Path) -> None:
         self._path = db_path
-        self._db: Optional[aiosqlite.Connection] = None
+        self._db: aiosqlite.Connection | None = None
 
     async def connect(self) -> None:
         self._db = await aiosqlite.connect(str(self._path))
@@ -70,8 +68,8 @@ class Store:
             return
 
         logger.info("Seeding initial events and review cases into SQLite store...")
-        from models.enums import Category, Mode, Outcome, Severity, SignalSource
-        from models.schemas import EventResponse, HistoryEntry, LLMSignal, ReviewDetail, RuleSignal
+        from models.enums import Mode, Outcome, Severity
+        from models.schemas import EventResponse, LLMSignal, ReviewDetail, RuleSignal
 
         seeds = [
             EventResponse(
@@ -227,7 +225,7 @@ class Store:
             )
         await self._db.commit()
 
-    async def get_event(self, event_id: str) -> Optional[EventResponse]:
+    async def get_event(self, event_id: str) -> EventResponse | None:
         cursor = await self._db.execute("SELECT data FROM events WHERE id = ?", (event_id,))
         row = await cursor.fetchone()
         if not row:
@@ -240,7 +238,7 @@ class Store:
                 data["review"] = review_data
         return EventResponse(**data)
 
-    async def _get_review_data(self, case_id: str) -> Optional[dict]:
+    async def _get_review_data(self, case_id: str) -> dict | None:
         cursor = await self._db.execute("SELECT data FROM reviews WHERE case_id = ?", (case_id,))
         row = await cursor.fetchone()
         return json.loads(row["data"]) if row else None
@@ -274,14 +272,14 @@ class Store:
 
     async def decide_review(
         self, case_id: str, final_outcome: FinalOutcome, reason: str
-    ) -> Optional[DecisionResponse]:
+    ) -> DecisionResponse | None:
         cursor = await self._db.execute("SELECT data FROM reviews WHERE case_id = ?", (case_id,))
         row = await cursor.fetchone()
         if not row:
             return None
 
         review = json.loads(row["data"])
-        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        now = datetime.now(UTC).isoformat(timespec="seconds")
 
         review["status"] = ReviewStatus.RESOLVED.value
         review["final_outcome"] = final_outcome.value

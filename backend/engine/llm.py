@@ -11,12 +11,10 @@ minimum confidence floor.  If the model is uncertain enough, it sets
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-
 from models.schemas import LLMSignal
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 logger = logging.getLogger("contentguard.llm")
 
@@ -26,7 +24,7 @@ _LABEL_MAP: dict[str, str] = {
     "threat": "threat",
     "insult": "harassment",
     "identity_hate": "hate",
-    "severe_toxic": "threat",       # severe toxicity mapped to threat
+    "severe_toxic": "harassment",   # mapped to harassment (previously misclassified as threat)
     "toxic": "harassment",          # general toxicity → harassment
     "obscene": "harassment",        # obscene → harassment
 }
@@ -44,8 +42,8 @@ class TransformerAnalyzer:
 
     def __init__(self, model_name: str = "unitary/toxic-bert") -> None:
         self.model_name = model_name
-        self._tokenizer: Optional[AutoTokenizer] = None
-        self._model: Optional[AutoModelForSequenceClassification] = None
+        self._tokenizer: AutoTokenizer | None = None
+        self._model: AutoModelForSequenceClassification | None = None
         self._labels: list[str] = []
 
     async def load(self) -> None:

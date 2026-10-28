@@ -27,6 +27,13 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.coverage.*
+
 # IDE & editors
 .vscode/
 .idea/
+

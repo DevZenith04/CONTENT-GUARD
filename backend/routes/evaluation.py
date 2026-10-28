@@ -1,13 +1,15 @@
 """ContentGuard · GET /v1/evaluation/latest route.
 
-Returns the latest evaluation run.  For now this returns a pre-computed
-fixture (same as the frontend preview) until a real evaluation runner
-is wired up.  The evaluation runner (evaluation/runner.py) can be hooked
-in later to compute results against a labelled dataset.
+Returns the latest real evaluation run saved in `backend/results/` if available,
+otherwise returns the fallback preview fixture.
 """
 
-from fastapi import APIRouter
+from __future__ import annotations
 
+import json
+from pathlib import Path
+
+from fastapi import APIRouter
 from models.schemas import (
     ConfusionCounts,
     EvaluationMeta,
@@ -18,8 +20,7 @@ from models.schemas import (
 
 router = APIRouter()
 
-# Pre-computed evaluation fixture — same data the frontend shows in preview mode.
-# Replace with real runner output when a labelled dataset is available.
+# Fallback preview fixture
 _FIXTURE = EvaluationResponse(
     meta=EvaluationMeta(
         dataset_hash="fixture-v1",
@@ -27,7 +28,7 @@ _FIXTURE = EvaluationResponse(
         policy_version="2026.01.0",
         model_version="transformer:unitary/toxic-bert",
         run_at=None,
-        preview=False,
+        preview=True,
     ),
     modes={
         "rule_only": ModeEvaluation(
@@ -70,4 +71,14 @@ _FIXTURE = EvaluationResponse(
 @router.get("/evaluation/latest", response_model=EvaluationResponse)
 async def evaluation_latest():
     """Return the latest evaluation results."""
+    results_dir = Path(__file__).resolve().parent.parent / "results"
+    if results_dir.exists():
+        eval_files = sorted(results_dir.glob("eval_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if eval_files:
+            try:
+                latest_file = eval_files[0]
+                data = json.loads(latest_file.read_text(encoding="utf-8"))
+                return EvaluationResponse.model_validate(data)
+            except (json.JSONDecodeError, ValueError, OSError):
+                return _FIXTURE
     return _FIXTURE

@@ -1,7 +1,6 @@
 """ContentGuard · POST /v1/moderate route."""
 
 from fastapi import APIRouter, HTTPException, Request
-
 from models.schemas import ModerateRequest, ModerateResponse
 
 router = APIRouter()

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install CPU torch (no heavy CUDA dependencies)
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install Dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install -r backend/requirements-dev.txt
+
+      - name: Lint with Ruff
+        run: ruff check backend
+
+      - name: Run Test Suite with Coverage
+        run: |
+          cd backend
+          PYTHONPATH=. pytest --cov=engine --cov=routes --cov=models --cov=storage --cov-report=term-missing --cov-fail-under=80

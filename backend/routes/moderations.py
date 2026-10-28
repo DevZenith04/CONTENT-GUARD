@@ -1,7 +1,6 @@
 """ContentGuard · GET /v1/moderations/{id} route."""
 
 from fastapi import APIRouter, HTTPException, Request
-
 from models.schemas import EventResponse
 
 router = APIRouter()

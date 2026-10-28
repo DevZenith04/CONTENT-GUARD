@@ -2,15 +2,17 @@
    These mirror exactly what the frontend (api.js) sends and expects."""
 
 from __future__ import annotations
-from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .enums import (
-    Category, FinalOutcome, Mode, Outcome, ReviewStatus, Severity, SignalSource,
+    FinalOutcome,
+    Mode,
+    Outcome,
+    ReviewStatus,
+    Severity,
+    SignalSource,
 )
-
 
 # ─── Request bodies ────────────────────────────────────────────────
 
@@ -52,9 +54,9 @@ class HistoryEntry(BaseModel):
 class ReviewDetail(BaseModel):
     case_id: str
     status: ReviewStatus
-    reviewer: Optional[str] = None
-    final_outcome: Optional[FinalOutcome] = None
-    reason: Optional[str] = None
+    reviewer: str | None = None
+    final_outcome: FinalOutcome | None = None
+    reason: str | None = None
     history: list[HistoryEntry] = []
 
 
@@ -69,7 +71,7 @@ class ModerateResponse(BaseModel):
     signals: list[RuleSignal | LLMSignal] = []
     policy_version: str
     model_version: str
-    latency_ms: Optional[int] = None
+    latency_ms: int | None = None
     mode: Mode
     preview: bool = False
 
@@ -87,9 +89,9 @@ class EventResponse(BaseModel):
     signals: list[RuleSignal | LLMSignal] = []
     policy_version: str
     model_version: str
-    latency_ms: Optional[int] = None
-    text_length: Optional[int] = None
-    review: Optional[ReviewDetail] = None
+    latency_ms: int | None = None
+    text_length: int | None = None
+    review: ReviewDetail | None = None
 
 
 # ─── Response: GET /v1/reviews ─────────────────────────────────────
@@ -102,7 +104,7 @@ class ReviewSummary(BaseModel):
     categories: list[str] = []
     created_at: str
     outcome: Outcome
-    final_outcome: Optional[str] = None
+    final_outcome: str | None = None
 
 
 # ─── Response: POST /v1/reviews/{case_id}/decision ────────────────
@@ -130,7 +132,7 @@ class LatencyStats(BaseModel):
 class ModeEvaluation(BaseModel):
     review_rate: float
     latency_ms: LatencyStats
-    cost_per_1k: Optional[float] = None
+    cost_per_1k: float | None = None
     counts: dict[str, ConfusionCounts]
 
 
@@ -139,7 +141,7 @@ class EvaluationMeta(BaseModel):
     items: int
     policy_version: str
     model_version: str
-    run_at: Optional[str] = None
+    run_at: str | None = None
     preview: bool = False
 
 
